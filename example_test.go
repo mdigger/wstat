@@ -58,9 +58,7 @@ Curabitur nec semper lectus, a tempor dui. Integer porta ligula nec sollicitudin
 feugiat. Vivamus ornare ligula vel elit pellentesque, id sagittis neque 
 dignissim. Nulla purus nunc, fermentum ut efficitur eu, ultrices vel odio. 
 Proin id accumsan nisi. Praesent sem felis, lacinia vel quam a, interdum 
-fringilla velit.
-
-1234567890.`
+fringilla velit.`
 
 	stat := wstat.FromString(sample)
 	fmt.Printf(`

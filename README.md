@@ -12,7 +12,7 @@ Library for quick counting the simplest statistics on the text:
 - allows you to perform calculations in the stream or addition of individual lines,
 - supports selection of text from HTML
 - counting the number of machine-visiting (typewritten) pages and author's pages
-- Calculation of reading time for different languages and different speeds
+- calculation of reading time for different languages and/or different speeds
 
 ```golang
 stat := wstat.FromString(`text data`)
