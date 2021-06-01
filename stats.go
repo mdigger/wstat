@@ -108,11 +108,13 @@ func (c Counter) AuthorPages() float32 {
 }
 
 // Duration will return the approximate text reading time at a given speed
-// reading (characters per minute). For the Russian language, the average speed
-// is 1,500 characters per minute.
-func (c Counter) Duration(speed int) time.Duration {
-	return time.Duration(
-		(c.Chars - c.Spaces + c.Words - 1) * int(time.Minute) / speed).
+// reading (words per minute).
+//
+// The average speed (words per minute):
+// 	English — 275 (reading time), 180 (speaking time)
+// 	Russian — 200 (reading time), 130 (speaking time).
+func (c Counter) Duration(wps int) time.Duration {
+	return (time.Duration(c.Words) * time.Minute / time.Duration(wps)).
 		Round(time.Second)
 }
 

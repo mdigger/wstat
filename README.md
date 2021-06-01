@@ -26,5 +26,5 @@ duration:     %v
 ---------------------
 `,
     stat.Chars, stat.Spaces, stat.Words,
-    stat.Pages(), stat.AuthorPages(), stat.Duration(1_500))
+    stat.Pages(), stat.AuthorPages(), stat.Duration(275))
 ```

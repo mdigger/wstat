@@ -74,7 +74,7 @@ duration:     %v
 ---------------------
 `,
 		stat.Chars, stat.Spaces, stat.Words,
-		stat.Pages(), stat.AuthorPages(), stat.Duration(1_500))
+		stat.Pages(), stat.AuthorPages(), stat.Duration(275))
 
 	// Output:
 	// --- stats -----------
@@ -85,7 +85,7 @@ duration:     %v
 	// typewritten:  2
 	// author's:     0.0876
 	// --- reading time ----
-	// duration:     2m18s
+	// duration:     1m53s
 	// ---------------------
 }
 
@@ -178,8 +178,8 @@ words:        %v
 
 	// Output:
 	// --- stats -----------
-	// chars:        3522
-	// spaces:       574
+	// chars:        3503
+	// spaces:       555
 	// words:        520
 	// ---------------------
 }
