@@ -58,13 +58,17 @@ Curabitur nec semper lectus, a tempor dui. Integer porta ligula nec sollicitudin
 feugiat. Vivamus ornare ligula vel elit pellentesque, id sagittis neque 
 dignissim. Nulla purus nunc, fermentum ut efficitur eu, ultrices vel odio. 
 Proin id accumsan nisi. Praesent sem felis, lacinia vel quam a, interdum 
-fringilla velit.`
+fringilla velit.
+
+1234567890.`
 
 	stat := wstat.FromString(sample)
 	fmt.Printf(`
 --- stats -----------
 chars:        %v
 spaces:       %v
+puncts:       %v
+numbers:      %v
 words:        %v
 --- pages -----------
 typewritten:  %v
@@ -73,19 +77,21 @@ author's:     %v
 duration:     %v
 ---------------------
 `,
-		stat.Chars, stat.Spaces, stat.Words,
-		stat.Pages(), stat.AuthorPages(), stat.Duration(275))
+		stat.Chars, stat.Spaces, stat.Puncts, stat.Numbers, stat.Words,
+		stat.Pages(), stat.AuthorPages(), stat.Duration(228))
 
 	// Output:
 	// --- stats -----------
 	// chars:        3504
 	// spaces:       566
+	// puncts:       111
+	// numbers:      0
 	// words:        518
 	// --- pages -----------
 	// typewritten:  2
 	// author's:     0.0876
 	// --- reading time ----
-	// duration:     1m53s
+	// duration:     2m16s
 	// ---------------------
 }
 
@@ -167,19 +173,8 @@ fringilla velit.</p>
 		panic(err)
 	}
 
-	fmt.Printf(`
---- stats -----------
-chars:        %v
-spaces:       %v
-words:        %v
----------------------
-`,
-		stat.Chars, stat.Spaces, stat.Words)
+	fmt.Println("reading time:", stat)
 
 	// Output:
-	// --- stats -----------
-	// chars:        3503
-	// spaces:       555
-	// words:        520
-	// ---------------------
+	// reading time: 2m36s (520 words)
 }

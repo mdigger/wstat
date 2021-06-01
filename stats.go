@@ -4,6 +4,7 @@ package wstat
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"io"
 	"time"
 	"unicode"
@@ -21,9 +22,34 @@ var (
 
 // Counter contains data with statistical counting results.
 type Counter struct {
-	Chars  int `json:"chars"`  // Total number of characters
-	Spaces int `json:"spaces"` // Number of spaces and separators
-	Words  int `json:"words"`  // Number of words
+	Chars   int `json:"chars"`   // Total number of characters
+	Spaces  int `json:"spaces"`  // Number of spaces and separators
+	Puncts  int `json:"puncts"`  // Number of punctuations
+	Numbers int `json:"numbers"` // Number of numerics
+	Words   int `json:"words"`   // Number of words
+}
+
+func (c *Counter) writeRune(r rune, isInWord bool) bool {
+	c.Chars++
+
+	switch {
+	case unicode.IsSpace(r):
+		c.Spaces++
+		return false
+	case unicode.IsPunct(r):
+		c.Puncts++
+		return false
+	case unicode.IsNumber(r):
+		c.Numbers++
+		return isInWord
+	case unicode.IsLetter(r):
+		if !isInWord {
+			c.Words++
+		}
+		return true
+	default:
+		return isInWord
+	}
 }
 
 // ReadFrom calc and add statistical information about the text from stream.
@@ -77,25 +103,6 @@ func (c *Counter) WriteString(s string) (n int, err error) {
 	return len(s), nil
 }
 
-func (c *Counter) writeRune(r rune, isInWord bool) bool {
-	c.Chars++
-
-	switch {
-	case unicode.IsSpace(r):
-		c.Spaces++
-		return false
-	case unicode.IsPunct(r):
-		return false
-	case unicode.IsLetter(r):
-		if !isInWord {
-			c.Words++
-		}
-		return true
-	default:
-		return isInWord
-	}
-}
-
 // Pages returns an approximate number of standard typewritten pages,
 // which takes the processed text.
 func (c Counter) Pages() int {
@@ -110,23 +117,50 @@ func (c Counter) AuthorPages() float32 {
 // Duration will return the approximate text reading time at a given speed
 // reading (words per minute).
 //
-// The average speed (words per minute):
-// 	English — 275 (reading time), 180 (speaking time)
-// 	Russian — 200 (reading time), 130 (speaking time).
+// The average speed by languages (wps):
+// 	English — 228
+// 	Spanish — 218
+// 	France — 195
+// 	Russian — 184
+// 	Turkish — 166
+// 	Finnish — 161
+// 	Chinese — 158
+// 	Arabic — 138
 func (c Counter) Duration(wps int) time.Duration {
+	if wps == 0 {
+		wps = 200 // default speed if not set
+	}
 	return (time.Duration(c.Words) * time.Minute / time.Duration(wps)).
 		Round(time.Second)
 }
 
-// Join returns a new statistics counter with total data.
-func (c Counter) Join(counters ...Counter) Counter {
+// String Returns a string with the reading time and the number of words.
+// The reading speed uses the 200 WPS value used by default in most of the
+// calculation algorithms for this kind.
+func (c Counter) String() string {
+	return fmt.Sprintf("%v (%v words)", c.Duration(0), c.Words)
+}
+
+// Add returns a new statistics counter with summared data.
+func (c Counter) Add(counters ...Counter) Counter {
 	for _, c2 := range counters {
 		c.Chars += c2.Chars
 		c.Spaces += c2.Spaces
+		c.Puncts += c2.Puncts
+		c.Numbers += c2.Numbers
 		c.Words += c2.Words
 	}
 
 	return c
+}
+
+// Reset resets all counters.
+func (c *Counter) Reset() {
+	c.Chars = 0
+	c.Spaces = 0
+	c.Puncts = 0
+	c.Numbers = 0
+	c.Words = 0
 }
 
 // ReadFrom returns statistical information about the text from stream.
