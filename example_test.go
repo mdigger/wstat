@@ -7,7 +7,7 @@ import (
 	"github.com/mdigger/wstat"
 )
 
-func ExampleFromString() {
+func ExampleString() {
 	sample := `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
 Nunc sit amet ipsum vel nunc interdum ultricies eu non augue. Donec sit amet 
 nisl aliquet, ultricies enim id, malesuada libero. Ut maximus felis neque, sed 
@@ -60,7 +60,7 @@ dignissim. Nulla purus nunc, fermentum ut efficitur eu, ultrices vel odio.
 Proin id accumsan nisi. Praesent sem felis, lacinia vel quam a, interdum 
 fringilla velit.`
 
-	stat := wstat.FromString(sample)
+	stat := wstat.String(sample)
 	fmt.Printf(`
 --- stats -----------
 chars:        %v

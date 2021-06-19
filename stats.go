@@ -141,19 +141,6 @@ func (c Counter) String() string {
 	return fmt.Sprintf("%v (%v words)", c.Duration(0), c.Words)
 }
 
-// Add returns a new statistics counter with summared data.
-func (c Counter) Add(counters ...Counter) Counter {
-	for _, c2 := range counters {
-		c.Chars += c2.Chars
-		c.Spaces += c2.Spaces
-		c.Puncts += c2.Puncts
-		c.Numbers += c2.Numbers
-		c.Words += c2.Words
-	}
-
-	return c
-}
-
 // Reset resets all counters.
 func (c *Counter) Reset() {
 	c.Chars = 0
@@ -169,14 +156,31 @@ func ReadFrom(r io.Reader) (c Counter, err error) {
 	return
 }
 
-// FromString returns statistical information about the text from string.
-func FromString(s string) (c Counter) {
+// String returns statistical information about the text from string.
+func String(s string) (c Counter) {
 	_, _ = c.WriteString(s)
 	return
 }
 
-// FromBytes returns statistical information about the text from bytes.
-func FromBytes(b []byte) (c Counter) {
+// Bytes returns statistical information about the text from bytes.
+func Bytes(b []byte) (c Counter) {
 	_, _ = c.Write(b)
 	return
+}
+
+// Sum returns a new statistics counter with summared data.
+func Sum(counters ...Counter) (c Counter) {
+	if len(counters) == 0 {
+		return
+	}
+	c = counters[0]
+	for _, c2 := range counters[1:] {
+		c.Chars += c2.Chars
+		c.Spaces += c2.Spaces
+		c.Puncts += c2.Puncts
+		c.Numbers += c2.Numbers
+		c.Words += c2.Words
+	}
+
+	return c
 }
