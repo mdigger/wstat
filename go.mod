@@ -1,5 +1,7 @@
 module github.com/mdigger/wstat
 
-go 1.16
+go 1.23.0
 
-require golang.org/x/net v0.0.0-20210525063256-abc453219eb5
+toolchain go1.24.5
+
+require golang.org/x/net v0.42.0
